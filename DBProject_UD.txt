@@ -1,0 +1,47 @@
+/* Query 1 - query used for the most paid countries*/
+SELECT c.Country,SUM(i.total)
+FROM Customer c 
+	 Join Invoice i
+	 on c.CustomerId=i.CustomerId
+GROUP BY 1
+ORDER BY 2 DESC;
+____________________________________________________________________________________________________
+/* Query 2 - query used for Important Genre Highest purchase*/
+SELECT g.Name,t.Milliseconds,I.BillingCountry ,SUM(I.total)
+FROM Genre g 
+    JOIN Track t 
+    ON g.GenreId=t.GenreId
+    JOIN InvoiceLine il 
+    ON t.TrackId=il.TrackId
+    JOIN Invoice I 
+    ON il.InvoiceId=I.InvoiceId
+GROUP BY 1
+ORDER BY 4 DESC;
+____________________________________________________________________________________________________
+/* Query 3 - query used for Artists who posted the most tracks that customers like the most*/
+SELECT a.ArtistId,a.Name,count(g.Name) AS Rock_Music_NUM 
+FROM Artist a 
+    JOIN Album b
+    ON a.ArtistId=b.ArtistId
+    JOIN Track t 
+    ON b.AlbumId=t.AlbumId
+    JOIN Genre g 
+    ON t.GenreId=g.GenreId
+WHERE g.Name="Rock" 
+GROUP BY 1,2
+ORDER BY 3 DESC ;
+__________________________________________________________________________________________________________________
+/* Query 4 - query used for Customer who listen the most to the important track who get the company most profit */
+SELECT DISTINCT c.Email,c.FirstName,c.LastName,c.Country,SUM(i.Total)as Custmoer_Purchase,g.Name 
+FROM Customer c 
+    JOIN Invoice i 
+    ON c.CustomerId=i.CustomerId
+    JOIN InvoiceLine il
+    ON i.InvoiceId=il.InvoiceId
+    JOIN Track t 
+    ON il.TrackId=t.TrackId
+    JOIN Genre g 
+    ON t.GenreId=g.GenreId
+WHERE g.Name="Rock"
+GROUP BY 2,3
+ORDER by 5 DESC ;
